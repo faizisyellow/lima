@@ -35,8 +35,24 @@ func (mv *Movie) PrettyRW() string {
 
 }
 
-func (mv *Movie) SetRecentWatch(dur string) {
+func (mv *Movie) SetRecentWatch(dur string) error {
+
+	if dur < mv.RecentWatch {
+		return fmt.Errorf("duration can not less then latest watch")
+	}
+
 	mv.RecentWatch = dur
+
+	return nil
+}
+
+func (mv *Movie) SetWatched() {
+
+	if mv.RecentWatch != "" {
+		mv.RecentWatch = ""
+	}
+
+	mv.Status = "watched"
 }
 
 func New(title, year, category, status string, isGoto bool) (Movie, error) {

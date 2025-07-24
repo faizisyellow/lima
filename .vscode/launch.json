@@ -10,6 +10,6 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["remove", ""], // Add an erray of application arguments here  
+      "args": ["list",  "-r love", "-s watched" ], // Add an erray of application arguments here  
       },]
 }
