@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"strconv"
+	"time"
 
 	"github.com/faizisyellow/lima/movie"
 	"github.com/fatih/color"
@@ -15,15 +17,17 @@ var (
 	isGoTo   bool
 	category string
 	status   string
+	episodes int
+	season   int
 )
 
 // AddCmd represents the Add command
 var AddCmd = &cobra.Command{
-	Use:   "add",
-	Short: "add adds a movie or series to the list",
-	Long: `Adds a movie or series to the list.
-	`,
-	Run: AddRun,
+	Use:     "add [title movie]",
+	Example: "add 'title' -y, --year 2025 -s, --status watchlist -c, --category movie -g, --goto",
+	Short:   "Adds a movie or series to the list",
+	Long:    `Adds a movie or series to the list.`,
+	Run:     AddRun,
 }
 
 func init() {
@@ -33,10 +37,12 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	AddCmd.Flags().StringVarP(&year, "year", "y", "2025", "the release year of movie")
+	AddCmd.Flags().StringVarP(&year, "year", "y", strconv.Itoa(time.Now().Year()), "the release year of movie")
 	AddCmd.Flags().BoolVarP(&isGoTo, "go-to", "g", false, "go-to is a prop to indicate that the movie is rewatchable")
 	AddCmd.Flags().StringVarP(&category, "category", "c", "movie", "the category of the movie")
-	AddCmd.Flags().StringVarP(&status, "status", "s", "watchlist", "status prop to indicate the movie is watchlist or still watching or already seen")
+	AddCmd.Flags().StringVarP(&status, "status", "s", "watchlist", "status prop to indicate the movie is watchlist or still watching or already seen [watchlist,watching,watched]")
+	AddCmd.Flags().IntVarP(&episodes, "episode", "e", -1, "if adding a series add an episode")
+	AddCmd.Flags().IntVar(&season, "season", -1, "if adding a series add an season")
 }
 
 func AddRun(cmd *cobra.Command, args []string) {
@@ -45,7 +51,11 @@ func AddRun(cmd *cobra.Command, args []string) {
 		log.Fatal(fmt.Errorf("title required"))
 	}
 
-	nm, err := movie.New(args[0], year, category, status, isGoTo)
+	if category == "series" && episodes <= 0 || season <= 0 {
+		cobra.CheckErr(fmt.Errorf("episode or season at least 1"))
+	}
+
+	nm, err := movie.New(args[0], year, category, status, episodes, season, isGoTo)
 	if err != nil {
 		log.Fatal(err)
 	}

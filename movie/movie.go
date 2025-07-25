@@ -8,17 +8,21 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/faizisyellow/lima/internal/utils"
 )
 
 type Movie struct {
 	Position    int
 	Title       string
 	Year        string
-	Status      string // [watchlist, watched, ongoing]
+	Status      string // [watchlist, watched, watching]
 	Category    string // [movie, series]
 	IsGoTo      bool
 	RecentWatch string // h:m:s
 	AddAt       time.Time
+	Season      int
+	Episodes    int
 }
 
 func (mv *Movie) Label() string {
@@ -37,8 +41,21 @@ func (mv *Movie) PrettyRW() string {
 
 func (mv *Movie) SetRecentWatch(dur string) error {
 
-	if dur < mv.RecentWatch {
-		return fmt.Errorf("duration can not less then latest watch")
+	if mv.RecentWatch != "" {
+
+		ti, err := time.Parse(time.TimeOnly, dur)
+		if err != nil {
+			return err
+		}
+
+		md, err := time.Parse(time.TimeOnly, mv.RecentWatch)
+		if err != nil {
+			return err
+		}
+
+		if ti.Before(md) {
+			return fmt.Errorf("duration can not less then latest watch")
+		}
 	}
 
 	mv.RecentWatch = dur
@@ -55,7 +72,75 @@ func (mv *Movie) SetWatched() {
 	mv.Status = "watched"
 }
 
-func New(title, year, category, status string, isGoto bool) (Movie, error) {
+func (mv *Movie) UpdateProps(title, status, category, year string, episode, season int, goTo bool) error {
+
+	if title != "" {
+		mv.Title = title
+	}
+
+	if status != "" {
+
+		// Set null if movie still have duration
+		if mv.Status == "watching" && status != "watching" {
+			mv.RecentWatch = ""
+		}
+
+		mv.Status = status
+	}
+
+	if category != "" {
+		mv.Category = category
+	}
+
+	if year != "" {
+		mv.Year = year
+	}
+
+	if mv.Category == "series" {
+
+		if episode != -1 {
+			mv.Episodes = episode
+		}
+
+		if season != -1 {
+			mv.Season = season
+		}
+	} else if episode > 0 || season > 0 {
+		return fmt.Errorf("can not update episode or season. not a series")
+	}
+
+	mv.IsGoTo = goTo
+
+	return nil
+}
+
+func (mv *Movie) PrettyCat() string {
+
+	if mv.Category != "series" {
+		return utils.ToUpperFirst(mv.Category)
+	}
+
+	return fmt.Sprintf("%v (Season %v)", utils.ToUpperFirst(mv.Category), mv.Season)
+}
+
+func (mv *Movie) PrettyStats() string {
+
+	var ep string
+
+	if mv.Category != "series" || mv.Status == "watched" {
+		return utils.ToUpperFirst(mv.Status)
+	}
+
+	if mv.Episodes > 1 {
+		ep = "Episodes"
+	} else {
+		ep = "Episode"
+	}
+
+	return fmt.Sprintf("%v (%v %v)", utils.ToUpperFirst(mv.Status), ep, mv.Episodes)
+}
+
+func New(title, year, category, status string, episode, season int, isGoto bool) (Movie, error) {
 
 	status = strings.ToLower(status)
 	category = strings.ToLower(category)
@@ -64,12 +149,16 @@ func New(title, year, category, status string, isGoto bool) (Movie, error) {
 		return Movie{}, fmt.Errorf("property category: %v not valid", category)
 	}
 
-	if status != "watchlist" && status != "watched" && status != "ongoing" {
+	if status != "watchlist" && status != "watched" && status != "watching" {
 		return Movie{}, fmt.Errorf("property status: %v not valid", status)
 	}
 
 	if len(year) != 4 {
 		return Movie{}, fmt.Errorf("property year: %v not valid", year)
+	}
+
+	if category == "series" && season < 1 && episode < 1 {
+		return Movie{}, fmt.Errorf("you add a series, need season and episode")
 	}
 
 	return Movie{
@@ -79,6 +168,8 @@ func New(title, year, category, status string, isGoto bool) (Movie, error) {
 		Category: category,
 		IsGoTo:   isGoto,
 		AddAt:    time.Now().Local(),
+		Season:   season,
+		Episodes: episode,
 	}, nil
 
 }

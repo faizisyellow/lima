@@ -26,8 +26,9 @@ var (
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"ls"},
-	Short:   "list lists All Movies	",
-	Long:    `list lists a movie with additional sort, filter, and searching`,
+	Example: "list --status watched --category movie",
+	Short:   "Lists all movies and series",
+	Long:    `lists a movie with additional sort, filter, and searching`,
 	Run:     ListRun,
 }
 
@@ -249,8 +250,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 				movie.Label()+"\t",
 				utils.ToUpperFirst(movie.Title)+"\t",
 				movie.Year+"\t",
-				utils.ToUpperFirst(movie.Category)+"\t",
-				utils.ToUpperFirst(movie.Status)+"\t",
+				movie.PrettyCat()+"\t",
+				movie.PrettyStats()+"\t",
 				movie.PrettyRW(),
 			)
 		}

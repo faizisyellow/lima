@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -13,10 +13,11 @@ import (
 
 // ongoingCmd represents the ongoing command
 var ongoingCmd = &cobra.Command{
-	Use:     "ongoing",
+	Use:     "ongoing [position duration]",
 	Aliases: []string{"og"},
-	Short:   "ongoing update movie's recent watch duration that still to be watching: args (id, duration)",
-	Long:    `ongoing update movie's recent watch duration with format (h:m:s)`,
+	Example: `og, ongoing 7 "01:00:00"`,
+	Short:   "Update movie's recent watch duration that still to be watching",
+	Long:    `update movie's recent watch duration with format (h:m:s)`,
 	Run:     OnGoingRun,
 }
 
@@ -41,37 +42,37 @@ func OnGoingRun(cmd *cobra.Command, args []string) {
 
 	movies, err := movie.ReadMovies(viper.GetString(EnvFile))
 	if err != nil {
-		log.Fatal(err)
+		cobra.CheckErr(err)
 	}
 
 	p, err := strconv.Atoi(pos)
 	if err != nil {
-		log.Fatalf("%v position is not valid", pos)
+		cobra.CheckErr(fmt.Errorf("%v position is not valid", pos))
 	}
 
-	if p == 0 || p > len(movies) {
-		log.Println(p, "doesn't match any movies")
+	if p <= 0 || p > len(movies) {
+		cobra.CheckErr(fmt.Errorf("%v doesn't match any movies", p))
 		return
 	}
 
 	if !strings.Contains(dur, ":") {
-		log.Println("duration format is invalid. (H:M:S)")
+		cobra.CheckErr(fmt.Errorf("duration format is invalid. (h:m:s)"))
 		return
 	}
 
 	if movies[p-1].Status != "ongoing" {
-		log.Println("status movie not ongoing.")
+		cobra.CheckErr(fmt.Errorf("movie with id %v is not ongoing", p))
 		return
 	}
 
 	err = movies[p-1].SetRecentWatch(dur)
 	if err != nil {
-		log.Fatal(err)
+		cobra.CheckErr(err)
 	}
 
 	err = movie.SaveMovie(viper.GetString(EnvFile), movies)
 	if err != nil {
-		log.Fatal(err)
+		cobra.CheckErr(err)
 	}
 
 	color.Green("Update Latest Watch successfully")

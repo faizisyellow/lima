@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 
 	"github.com/faizisyellow/lima/movie"
@@ -12,9 +12,10 @@ import (
 
 // watchedCmd represents the watched command
 var watchedCmd = &cobra.Command{
-	Use:     "watched",
+	Use:     "watched [position]",
 	Aliases: []string{"wc"},
-	Short:   "watched update the movie that's the movie have been watched",
+	Example: "wc, watched 8",
+	Short:   "Update the movie to have been watched",
 	Run:     WatchedRun,
 }
 
@@ -38,14 +39,14 @@ func WatchedRun(cmd *cobra.Command, args []string) {
 
 	movies, err := movie.ReadMovies(viper.GetString(EnvFile))
 	if err != nil {
-		log.Fatal(err)
+		cobra.CheckErr(err)
 	}
 
 	for _, arg := range args {
 
 		intArg, err := strconv.Atoi(arg)
 		if err != nil {
-			log.Fatal(err)
+			cobra.CheckErr(fmt.Errorf("%v not valid args, err: %v", arg, err))
 		}
 
 		intArgs = append(intArgs, intArg)
@@ -65,6 +66,6 @@ func WatchedRun(cmd *cobra.Command, args []string) {
 
 	err = movie.SaveMovie(viper.GetString(EnvFile), movies)
 	if err != nil {
-		log.Fatal(err)
+		cobra.CheckErr(err)
 	}
 }

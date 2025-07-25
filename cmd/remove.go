@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/faizisyellow/lima/movie"
@@ -13,10 +12,11 @@ import (
 
 // removeCmd represents the remove command
 var removeCmd = &cobra.Command{
-	Use:     "remove",
+	Use:     "remove [positions]",
+	Example: "rm, remove 8 9 10 ..",
 	Aliases: []string{"rm"},
-	Short:   "remove removes a movie from the list by the movie's position",
-	Long: `remove removes a movie from the list by the movie's position  
+	Short:   "Removes a movie from the list by the movie's position",
+	Long: `removes a movie from the list by the movie's position  
 	`,
 	Run: RemoveRun,
 }
@@ -37,19 +37,28 @@ func init() {
 
 func RemoveRun(cmd *cobra.Command, args []string) {
 
-	if len(args) == 0 {
-		log.Fatal(fmt.Errorf("position movie is required"))
+	var intArgs []int
+
+	if len(args) < 1 {
+		cobra.CheckErr(fmt.Errorf("remove needs a position movie for the command"))
 	}
 
-	p, err := strconv.Atoi(args[0])
-	if err != nil {
-		log.Fatalf("%v position is not valid", args[0])
+	for _, arg := range args {
+
+		intArg, err := strconv.Atoi(arg)
+		if err != nil {
+			cobra.CheckErr(fmt.Errorf("%v not valid args, err: %v", arg, err))
+		}
+
+		intArgs = append(intArgs, intArg)
 	}
 
-	err = movie.DeleteMovies(viper.GetString(EnvFile), p)
-	if err != nil {
-		log.Fatal(err)
+	for _, arg := range intArgs {
+		err := movie.DeleteMovies(viper.GetString(EnvFile), arg)
+		if err != nil {
+			cobra.CheckErr(err)
+		}
 	}
 
-	color.Red("sucess remove movie with id: %v\n", p)
+	color.Red("remove movies sucessfull")
 }
