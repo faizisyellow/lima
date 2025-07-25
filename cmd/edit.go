@@ -22,7 +22,6 @@ var (
 	TitleUpdateMovie    string
 	StatusUpdateMovie   string
 	CategoryUpdateMovie string
-	GoToUpdateMovie     bool
 	YearUpdateMovie     string
 	EpisodeUpdateMovie  int
 	SeasonUpdateMovie   int
@@ -37,7 +36,6 @@ func init() {
 	// and all subcommands, e.g.:
 	// editCmd.PersistentFlags().String("foo", "", "A help for foo")
 
-	editCmd.Flags().BoolVarP(&GoToUpdateMovie, "go-to", "g", false, "enable or disable go-to property")
 	editCmd.Flags().StringVarP(&StatusUpdateMovie, "status", "s", "", "movie's status watch (watched,ongoing,watchlist)")
 	editCmd.Flags().StringVarP(&CategoryUpdateMovie, "cat", "c", "", "movie's category (series,movie)")
 	editCmd.Flags().StringVarP(&TitleUpdateMovie, "title", "t", "", "movie's title")
@@ -63,7 +61,7 @@ func EditRun(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(fmt.Errorf("no matching any movies"))
 	}
 
-	err = movies[p-1].UpdateProps(TitleUpdateMovie, StatusUpdateMovie, CategoryUpdateMovie, YearUpdateMovie, EpisodeUpdateMovie, SeasonUpdateMovie, GoToUpdateMovie)
+	err = movies[p-1].UpdateProps(TitleUpdateMovie, StatusUpdateMovie, CategoryUpdateMovie, YearUpdateMovie, EpisodeUpdateMovie, SeasonUpdateMovie)
 	if err != nil {
 		cobra.CheckErr(fmt.Errorf("can not update episode or season. not a series"))
 	}

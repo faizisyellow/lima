@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 	"os"
+	"slices"
 	"strings"
 	"text/tabwriter"
 
@@ -49,213 +50,75 @@ func init() {
 	listCmd.Flags().StringVar(&search, "search", "", "to searching a movie by the movie's title")
 
 	listCmd.Flags().BoolVarP(&date, "date", "d", false, "to display date column when the movie is added to the list")
-	listCmd.Flags().StringVar(&sort, "sort", "latest", "to sorting list of movies by the time the movie added to the list")
+	listCmd.Flags().StringVar(&sort, "sort", "older", "to sorting list of movies by the time the movie added to the list")
 }
 
 func ListRun(cmd *cobra.Command, args []string) {
+
+	var filteredMovies []*movie.Movie
 
 	movies, err := movie.ReadMovies(viper.GetString(EnvFile))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 3, 0, 2, ' ', 0)
+	w := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
 	pret := color.New(color.FgBlue)
 
-	switch {
+	for _, movie := range movies {
 
-	// Only filter by status
-	case statusMovie != "" && categoryMovie == "" && !goTo && search == "":
-
-		for _, movie := range movies {
-
-			if statusMovie == movie.Status {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
+		/*
+			If there's no status skip the conditional.
+			If there's status and the status is the same with the the movie's status
+			Skip the conditional.
+			If there's status and the status is not the same skip the current loop immediately.
+		*/
+		if statusMovie != "" && movie.Status != statusMovie {
+			continue
 		}
 
-	// Only filter by category
-	case categoryMovie != "" && statusMovie == "" && !goTo && search == "":
-
-		for _, movie := range movies {
-
-			if categoryMovie == movie.Category {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
+		if categoryMovie != "" && movie.Category != categoryMovie {
+			continue
 		}
 
-	// Only filter by go-to
-	case goTo && statusMovie == "" && categoryMovie == "" && search == "":
-
-		for _, movie := range movies {
-
-			if movie.IsGoTo {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
+		if goTo && !movie.IsGoTo {
+			continue
 		}
 
-	// Only filter by searching
-	case search != "" && statusMovie == "" && categoryMovie == "" && !goTo:
-
-		for _, movie := range movies {
-
-			if strings.Contains(movie.Title, search) {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
+		if search != "" && !strings.Contains(strings.ToLower(movie.Title), strings.ToLower(search)) {
+			continue
 		}
 
-	// filter by status movie and category movie
-	case statusMovie != "" && categoryMovie != "":
+		filteredMovies = append(filteredMovies, &movie)
+	}
 
-		for _, movie := range movies {
+	slices.SortFunc(filteredMovies, func(a *movie.Movie, b *movie.Movie) int {
 
-			if statusMovie == movie.Status && categoryMovie == movie.Category {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
+		// sorted desc
+		if sort == "latest" {
+			return b.AddAt.Compare(a.AddAt)
 		}
 
-	// filter by status movie and go-to
-	case statusMovie != "" && goTo:
+		// sorted asc
+		return a.AddAt.Compare(b.AddAt)
+	})
 
-		for _, movie := range movies {
+	for _, movie := range filteredMovies {
 
-			if statusMovie == movie.Status && movie.IsGoTo {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
+		pret.Fprintln(w,
+			movie.Label()+"\t",
+			utils.ToUpperFirst(movie.Title)+"\t",
+			movie.Year+"\t",
+			movie.PrettyCat()+"\t",
+			movie.PrettyStats()+"\t",
+			movie.PrettyRW()+"\t",
+			movie.DisplayDate(date),
+		)
 
-		}
+	}
 
-	// filter by category movie and go-to
-	case categoryMovie != "" && goTo:
-
-		for _, movie := range movies {
-
-			if categoryMovie == movie.Category && movie.IsGoTo {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
-		}
-
-	// filter by searching and status movie
-	case search != "" && statusMovie != "":
-
-		for _, movie := range movies {
-
-			if strings.Contains(movie.Title, search) && statusMovie == movie.Status {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
-		}
-
-	// filter by searching and category movie
-	case search != "" && categoryMovie != "":
-
-		for _, movie := range movies {
-
-			if strings.Contains(movie.Title, search) && categoryMovie == movie.Category {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
-		}
-
-	// filter by searching and go-to
-	case search != "" && goTo:
-
-		for _, movie := range movies {
-
-			if strings.Contains(movie.Title, search) && movie.IsGoTo {
-				pret.Fprintln(w,
-					movie.Label()+"\t",
-					utils.ToUpperFirst(movie.Title)+"\t",
-					movie.Year+"\t",
-					movie.PrettyCat()+"\t",
-					movie.PrettyStats()+"\t",
-					movie.PrettyRW(),
-				)
-			}
-
-		}
-
-	default:
-		for _, movie := range movies {
-			pret.Fprintln(w,
-				movie.Label()+"\t",
-				utils.ToUpperFirst(movie.Title)+"\t",
-				movie.Year+"\t",
-				movie.PrettyCat()+"\t",
-				movie.PrettyStats()+"\t",
-				movie.PrettyRW(),
-			)
-		}
-
+	if len(filteredMovies) <= 0 {
+		color.Yellow("movies not found")
 	}
 
 	w.Flush()

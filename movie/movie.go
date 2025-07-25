@@ -39,6 +39,16 @@ func (mv *Movie) PrettyRW() string {
 
 }
 
+func (mv *Movie) DisplayDate(opt bool) string {
+
+	if !opt {
+		return ""
+	}
+
+	return mv.AddAt.Format(time.Stamp)
+
+}
+
 func (mv *Movie) SetRecentWatch(dur string) error {
 
 	if mv.RecentWatch != "" {
@@ -72,7 +82,7 @@ func (mv *Movie) SetWatched() {
 	mv.Status = "watched"
 }
 
-func (mv *Movie) UpdateProps(title, status, category, year string, episode, season int, goTo bool) error {
+func (mv *Movie) UpdateProps(title, status, category, year string, episode, season int) error {
 
 	if title != "" {
 		mv.Title = title
@@ -108,8 +118,6 @@ func (mv *Movie) UpdateProps(title, status, category, year string, episode, seas
 	} else if episode > 0 || season > 0 {
 		return fmt.Errorf("can not update episode or season. not a series")
 	}
-
-	mv.IsGoTo = goTo
 
 	return nil
 }
