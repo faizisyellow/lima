@@ -74,8 +74,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -92,8 +92,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -110,8 +110,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -128,8 +128,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -146,8 +146,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -164,8 +164,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -182,8 +182,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -200,8 +200,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -218,8 +218,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
@@ -236,8 +236,8 @@ func ListRun(cmd *cobra.Command, args []string) {
 					movie.Label()+"\t",
 					utils.ToUpperFirst(movie.Title)+"\t",
 					movie.Year+"\t",
-					utils.ToUpperFirst(movie.Category)+"\t",
-					utils.ToUpperFirst(movie.Status)+"\t",
+					movie.PrettyCat()+"\t",
+					movie.PrettyStats()+"\t",
 					movie.PrettyRW(),
 				)
 			}
