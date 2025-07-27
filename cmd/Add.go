@@ -51,7 +51,7 @@ func AddRun(cmd *cobra.Command, args []string) {
 		log.Fatal(fmt.Errorf("title required"))
 	}
 
-	if category == "series" && episodes <= 0 || season <= 0 {
+	if category == "series" && (episodes <= 0 && season <= 0) {
 		cobra.CheckErr(fmt.Errorf("episode or season at least 1"))
 	}
 

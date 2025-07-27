@@ -10,6 +10,6 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["edit", "4", "-g",  ], // Add an erray of application arguments here  
+      "args": ["add", "cha cha real smooth", "-c", "movie" ,  ], // Add an erray of application arguments here  
       },]
 }
