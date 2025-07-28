@@ -68,5 +68,5 @@ func AddRun(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	color.Green("Add new movie successfully")
+	color.Green("add new movie successfully")
 }

@@ -49,4 +49,5 @@ lima remove [id]
 ![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-rm-demo.png?raw=true)
 
 Use --help to see all other commands
+
 ``` lima --help ```

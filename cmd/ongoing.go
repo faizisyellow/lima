@@ -79,5 +79,5 @@ func OnGoingRun(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(err)
 	}
 
-	color.Green("Update Latest Watch successfully")
+	color.Green("update Latest Watch successfully")
 }
