@@ -135,7 +135,7 @@ func (mv *Movie) PrettyStats() string {
 
 	var ep string
 
-	if mv.Category != "series" || mv.Status == "watched" {
+	if mv.Category != "series" || mv.Status != "watching" {
 		return utils.ToUpperFirst(mv.Status)
 	}
 
@@ -165,7 +165,7 @@ func New(title, year, category, status string, episode, season int, isGoto bool)
 		return Movie{}, fmt.Errorf("property year: %v not valid", year)
 	}
 
-	if category == "series" && season < 1 && episode < 1 {
+	if category == "series" && status != "watchlist" && season < 1 && episode < 1 {
 		return Movie{}, fmt.Errorf("you add a series, need season and episode")
 	}
 
