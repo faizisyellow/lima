@@ -31,7 +31,7 @@ Run:
 ```./bin/lima```
 
 # Configuration
-> Lima stores (json) list of movies trough env variable and with prefix LIMA_
+> Lima stores (json) list of movies through env variable and with prefix LIMA_
 
 - Bash
     - Create a json file to store the list:
