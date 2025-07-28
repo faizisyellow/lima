@@ -13,6 +13,36 @@ With lima you can manage your movies list easyly and as simple as possible.
 - Delete a movie
 
 
+# Installation
+> Currently only manual installation is available, so lima requires [Go](https://go.dev/doc/install) to be installed
+
+Clone lima repository
+
+Get depedencies that lima needed
+
+```go mod tidy ```
+
+Build lima project :
+
+``` make lima-build ```
+
+Run:
+
+```./bin/lima```
+
+# Configuration
+> Lima stores (json) list of movies trough env variable and with prefix LIMA_
+
+- Bash
+    - Create a json file to store the list:
+
+    ```touch $HOME/.lima_store.json```
+
+    - Open your bashrc config, then export ENV variable:
+    
+    ``` export LIMA_store=$HOME/.lima_store.json``` 
+
+
 # Usage Examples
 An example of lists movies  
 

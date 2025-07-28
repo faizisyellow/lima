@@ -124,7 +124,7 @@ func (mv *Movie) UpdateProps(title, status, category, year string, episode, seas
 
 func (mv *Movie) PrettyCat() string {
 
-	if mv.Category != "series" {
+	if mv.Category != "series" || mv.Status != "watching" {
 		return utils.ToUpperFirst(mv.Category)
 	}
 
