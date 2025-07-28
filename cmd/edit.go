@@ -47,6 +47,10 @@ func init() {
 
 func EditRun(cmd *cobra.Command, args []string) {
 
+	if len(args) < 1 {
+		cobra.CheckErr(fmt.Errorf("edit needs a position movie for the command"))
+	}
+
 	movies, err := movie.ReadMovies(viper.GetString(EnvFile))
 	if err != nil {
 		cobra.CheckErr(err)

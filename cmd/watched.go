@@ -35,6 +35,10 @@ func init() {
 
 func WatchedRun(cmd *cobra.Command, args []string) {
 
+	if len(args) < 1 {
+		cobra.CheckErr(fmt.Errorf("watched needs a position movie for the command"))
+	}
+
 	var intArgs []int
 
 	movies, err := movie.ReadMovies(viper.GetString(EnvFile))

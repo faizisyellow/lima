@@ -37,6 +37,10 @@ func init() {
 
 func OnGoingRun(cmd *cobra.Command, args []string) {
 
+	if len(args) < 1 {
+		cobra.CheckErr(fmt.Errorf("ongoing needs a position movie for the command"))
+	}
+
 	pos := args[0]
 	dur := args[1]
 
