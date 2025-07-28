@@ -14,7 +14,7 @@ import (
 var editCmd = &cobra.Command{
 	Use:     "edit [position]",
 	Example: "Edit 4 --status watched --category series --episode 4 --season 3",
-	Short:   "updates a movie's property  that only update the given property",
+	Short:   "Updates a movie's property  that only update the given property",
 	Run:     EditRun,
 }
 
