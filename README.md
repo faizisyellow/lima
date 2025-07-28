@@ -14,7 +14,8 @@ With lima you can manage your movies list easyly and as simple as possible.
 
 
 # Usage Examples
-Here's an example of lists movies
-` lima list `  
+Here's an example of lists movies  
+
+``` lima list```  
 
 ![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-ls-demo.png?raw=true)
