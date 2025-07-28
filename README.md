@@ -1,4 +1,4 @@
-![lima](https://github.com/faizisyellow/lima/tree/main/demo/lima-banner.png?raw=true)
+![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-banner.png?raw=true)
 
 # What is it ?
 Lima is a movie list management command line interface application.  
@@ -15,5 +15,6 @@ With lima you can manage your movies list easyly and as simple as possible.
 
 # Usage Examples
 Here's an example of lists movies
-> lima list
-![lima](https://github.com/faizisyellow/lima/tree/main/demo/lima-ls-demo.png?raw=true)
+> lima list  
+
+![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-ls-demo.png?raw=true)
