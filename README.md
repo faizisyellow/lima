@@ -16,16 +16,16 @@ With lima you can manage your movies list easyly and as simple as possible.
 # Usage Examples
 An example of lists movies  
 
-```lima
-list
+```
+lima list
 ```  
 
 ![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-ls-demo.png?raw=true)
 
 An example of add a new movie
 
-```lima
-add [title] --year --category --status
+```
+lima add [title] --year --category --status
 ```  
 
 ![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-add-demo.png?raw=true)
@@ -33,8 +33,8 @@ add [title] --year --category --status
 An example of edit a movie
 
 
-```lima
-edit [id] --title --year
+```
+lima edit [id] --title --year
 ```  
 
 ![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-update-demo.png?raw=true)
@@ -42,10 +42,11 @@ edit [id] --title --year
 An example of remove a movie
 
 
-```lima
-remove [id]
+```
+lima remove [id]
 ```  
 
 ![lima](https://github.com/faizisyellow/lima/blob/main/demo/lima-rm-demo.png?raw=true)
 
-## ``see `lima --help to learn more commands` ``
+Use --help to see all other commands
+``` lima --help ```
